@@ -1,42 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>VUGY Mini App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 100px;
-            background: #f5f5f5;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GreenLeaf Altynai</title>
 
-        h1 {
-            color: #333;
-        }
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f6f8;
+    }
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-    </style>
+    header {
+      padding: 20px;
+      text-align: center;
+      background: white;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .logo {
+      color: #2e7d32;
+    }
+
+    .container {
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 12px;
+      height: 120px;
+      object-fit: cover;
+    }
+
+    .title {
+      font-size: 14px;
+      margin: 8px 0 4px;
+      font-weight: bold;
+    }
+
+    .price {
+      color: #2e7d32;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    /* cart bar */
+    .cart-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .checkout {
+      background: #000;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: white;
+      border: none;
+    }
+  </style>
 </head>
+
 <body>
 
-    <h1>Привет, VUGY! 🔥</h1>
+<header>
+  🌿 <span class="logo">GreenLeaf Altynai</span>
+</header>
 
-    <button onclick="hello()">
-        Нажми меня
-    </button>
+<div class="container" id="products"></div>
 
-    <script>
-        function hello() {
-            alert("Мини-приложение работает!");
-        }
-    </script>
+<div class="cart-bar">
+  <div>Корзина: <span id="cart-count">0</span> шт</div>
+  <button class="checkout" onclick="checkout()">Оформить</button>
+</div>
+
+<script>
+  const products = [
+    {id:1, name:"Шампунь Herbal Care", price: 45000, img:"https://images.unsplash.com/photo-1612810806695-30f7f3a8b3c2"},
+    {id:2, name:"Коллаген Beauty Glow", price: 89000, img:"https://images.unsplash.com/photo-1611078489935-0cb964de46d6"},
+    {id:3, name:"Крем для лица Aloe", price: 52000, img:"https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd"},
+    {id:4, name:"Гель для душа Fresh", price: 35000, img:"https://images.unsplash.com/photo-1615634260167-c8cdede054de"},
+    {id:5, name:"Маска для волос Silk", price: 61000, img:"https://images.unsplash.com/photo-1611078489991-7c5b9f2c5d7e"},
+  ];
+
+  let cart = [];
+
+  const container = document.getElementById("products");
+  const cartCount = document.getElementById("cart-count");
+
+  function render() {
+    container.innerHTML = "";
+    products.forEach(p => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${p.img}" />
+          <div class="title">${p.name}</div>
+          <div class="price">${p.price.toLocaleString()} UZS</div>
+          <button onclick="addToCart(${p.id})">В корзину</button>
+        </div>
+      `;
+    });
+  }
+
+  function addToCart(id) {
+    const item = products.find(p => p.id === id);
+    cart.push(item);
+    cartCount.innerText = cart.length;
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("Корзина пуста");
+      return;
+    }
+
+    let message = "🛍 Заказ GreenLeaf Altynai:%0A";
+    cart.forEach((p, i) => {
+      message += `${i+1}. ${p.name} - ${p.price} UZS%0A`;
+    });
+
+    const url = `https://t.me/Altynai200178?text=${message}`;
+    window.open(url, "_blank");
+  }
+
+  render();
+</script>
 
 </body>
 </html>
